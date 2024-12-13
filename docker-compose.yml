@@ -66,6 +66,26 @@ services:
                 - ping
             retries: 3
             timeout: 5s
+    horizon:
+        container_name: ${APP_NAME}-horizon
+        build:
+            context: './vendor/laravel/sail/runtimes/8.4'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        depends_on:
+            - redis
+        volumes:
+            - .:/var/www/html
+        networks:
+            - sail
+        working_dir: /var/www/html
+        entrypoint: [
+            "sh", "-c", "php artisan horizon"
+        ]
+        environment:
+            SERVICE_NAME: horizon
+            SERVICE_TAGS: dev
 networks:
     sail:
         driver: bridge
